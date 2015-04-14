@@ -1,69 +1,55 @@
 package com.homework.java;
 
 /**
- * Car 관리 클래스(배열사용)
+ * Car 객체들을 관리하는 관리클래스
+ * CarStorage를 사용하여 Car목록을 관리
+ * Singleton으로 구현
  * @author 심규원
  *
  */
 public class CarManagement {
-	private Car[] cars;
+	private CarStorage storage;
 	private int carId = 0;
-	private int maxCars;
+	private static CarManagement instance;
 	
-	/**
-	 * 생성자
-	 * @param maxCars - cars 배열의 크기 
-	 */
-	public CarManagement(int maxCars){
-		this.maxCars = maxCars;
-		cars = new Car[maxCars];
+	private CarManagement(){
+		storage = new CarStorage();
 	}
-	
 	/**
-	 * 저장된 모든 Car의 정보 출력
+	 * CarManagement의 객체를 획득하는 메소드
+	 * @return CarManagement의 객체를 리턴
 	 */
-	public String viewAllCar(){
-		String result = new String();
-		for(int i=0; i<maxCars; i++){
-			if(cars[i] != null){
-				result += cars[i].getDetails();				
-			}
+	public static CarManagement getInstance(){
+		if(instance == null){
+			instance = new CarManagement();
+		}
+		return instance;
+	}
+	/**
+	 * 저장된 모든 Car 객체의 getDetails() 메소드를 호출
+	 * @return - 저장된 Car 객체의 리스트를 리턴
+	 */
+	public String[] viewAllCar(){
+		int carCount = storage.getCarCount();
+		String[] result = new String[carCount];
+		for(int i=0; i<carCount; i++){
+			result[i] = storage.getCar(i).getDetails();
 		}
 		return result;
 	}
-	
-	/**
-	 * Car 생성
-	 * create 작업 시 배열의 이동 없음(최대 maxCars만 create가능)
-	 * @param carType - Car종류
-	 * @param carNumber - 차량번호
-	 * @param mileage - 마일리지
-	 * @return
-	 */
-	public boolean createCar(String carType, String carNumber, double mileage){
-		if(carId > maxCars){
-			return false;
-		}
-		else{
-			cars[carId] = new Car(carType, carId, mileage, carNumber);
-			carId++;
-			return true;
-		}
+	public boolean createCar(CarInfo info){
+		info.setId(carId++);
+		return storage.addCar(new Car(info));
 	}
-	
 	/**
-	 * Car 삭제
-	 * delete 작업 시 배열의 이동 없음
-	 * @param carId
-	 * @return
+	 * CarStorage에서 해당 carId의 Car객체를 삭제
+	 * @param carId - 삭제할 Car 객체의 carId
+	 * @return - 삭제 성공여부
 	 */
 	public boolean deleteCar(int carId){
-		if(carId < 0 || carId > this.carId){
+		if(storage.deleteCar(carId) == null){
 			return false;
 		}
-		else{
-			cars[carId] = null;
-			return true;
-		}
+		return true;
 	}
 }
