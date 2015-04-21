@@ -64,7 +64,7 @@ public class CarManagement {
 	 * @return - 찾은 생성자 리턴, 실패 시 null
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private Constructor findConstructor(String className) {
+	protected Constructor findConstructor(String className) {
 		// TODO Auto-generated method stub
 		Class klass = null;
 		Constructor cons = null;

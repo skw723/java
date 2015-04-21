@@ -16,5 +16,6 @@ public interface OutputManager {
 	public void printIncorrectValue();
 	public void printExit();
 	public void printViewConsumption();
-	public void printConsumption(TreeMap<String, Double> data);
+	public void printBeforeConsumption(String message);
+	public void printAfterConsumption(TreeMap<String, Double> data);
 }

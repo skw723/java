@@ -54,11 +54,15 @@ public class ConsoleOutputManager implements OutputManager{
 		System.out.printf("선택하세요 : ");
 	}
 	@Override
-	public void printConsumption(TreeMap<String, Double> data){
+	public void printAfterConsumption(TreeMap<String, Double> data){
 		Iterator<String> keys = data.keySet().iterator();
 		Iterator<Double> values = data.values().iterator();
 		while(keys.hasNext()){
 			System.out.printf("%-5s %.2f\n", keys.next(), values.next());			
 		}
+	}
+	@Override
+	public void printBeforeConsumption(String message) {
+		System.out.println(message);
 	}
 }

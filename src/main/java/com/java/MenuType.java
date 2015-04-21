@@ -60,29 +60,4 @@ public enum MenuType {
 		}
 		return null;
 	}
-	/**
-	 * 입력받은 menuType이 자식 Menu인지 확인
-	 * @param childMenu - 확인할 자식 Menu
-	 * @return - 확인결과
-	 */
-	public boolean isChildMenu(MenuType childMenu){
-		if(this.menuCode == childMenu.getParentMenuCode()){
-			return true;
-		}
-		else{
-			return false;
-		}
-	}
-	/**
-	 * 입력받은 menuType이 동일한 메뉴인지 확인
-	 * menu의 name을 비교
-	 * @param obj - 확인할 Menu
-	 * @return - 확인결과
-	 */
-	public boolean isCurrentMenu(MenuType obj){
-		if(this == obj){
-			return true;
-		}
-		return this.toString().equals(obj.toString());
-	}
 }

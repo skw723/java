@@ -17,10 +17,10 @@ import com.java.vo.RecordInfo;
  */
 public class CarManager {
 	private MenuType currentView;
-	private CarManagement carMgt;
-	private RecordManagement recordMgt;
-	private InputManager input;
-	private OutputManager output;
+	private CarManagement carManager;
+	private RecordManagement recordManager;
+	private InputManager inputManager;
+	private OutputManager outputManager;
 
 	/**
 	 * 인스턴스 생성 시 input, output에 사용할 클래스 설정
@@ -29,10 +29,10 @@ public class CarManager {
 	 */
 	public CarManager(InputManager input, OutputManager output){
 		currentView = MenuType.Main;
-		carMgt = CarManagement.getInstance();
-		recordMgt = RecordManagement.getInstance();
-		this.input = input;
-		this.output = output;
+		carManager = CarManagement.getInstance();
+		recordManager = RecordManagement.getInstance();
+		this.inputManager = input;
+		this.outputManager = output;
 	}
 	/**
 	 * CarManager 시작 메소드
@@ -42,7 +42,7 @@ public class CarManager {
 			printCurrentView();
 			int menuCode = 0;
 			try{
-				menuCode = input.readInteger();
+				menuCode = inputManager.readInteger();
 				moveMenu(menuCode);
 			}catch(NumberFormatException e){
 				incorrectValue();
@@ -53,16 +53,16 @@ public class CarManager {
 	/**
 	 * 메인화면 출력
 	 */
-	private void printMain() {
-		output.printMain();
+	protected void printMain() {
+		outputManager.printMain();
 	}
 	/**
 	 * 차량 추가 화면 출력
 	 */
-	private void printAddCar(){
-		output.printBeforeAddCar();
+	protected void printAddCar(){
+		outputManager.printBeforeAddCar();
 		int addedCar = addCar();
-		output.printAfterAddCar(addedCar);
+		outputManager.printAfterAddCar(addedCar);
 		upMenu();
 		printMain();
 	}
@@ -75,51 +75,49 @@ public class CarManager {
 	 * 5. 모든 파일 완료 후 최종적으로 추가된 차 개수 리턴
 	 * @return - 추가된 차량의 개수
 	 */
-	private int addCar() {
-		// TODO Auto-generated method stub
-		
+	protected int addCar() {
 		int addedCount = 0;
-		String []fileNames = input.getFileNames(Main.txtListPath);
+		String []fileNames = inputManager.getFileNames(Main.txtListPath);
 		if(fileNames == null){
 			return 0;
 		}
-		carMgt.clearList();
-		for(int i=0; i<fileNames.length; i++){
-			String[] strInfo = input.readFile(fileNames[i], Main.txtListPath);
-			CarInfo[] info = Util.StringToCarInfo(strInfo);
-			addedCount += carMgt.createCars(info, fileNames[i]);
+		else{
+			carManager.clearList();
+			for(int i=0; i<fileNames.length; i++){
+				String[] strInfo = inputManager.readFile(fileNames[i], Main.txtListPath);
+				CarInfo[] info = Util.StringToCarInfo(strInfo);
+				addedCount += carManager.createCars(info, fileNames[i]);
+			}
+			return addedCount;			
 		}
-		return addedCount;
 	}
 	/**
 	 * 운행기록 추가화면 출력
 	 */
-	private void printAddRecord() {
-		output.printBeforeAddRecord();
+	protected void printAddRecord() {
+		outputManager.printBeforeAddRecord();
 		int addedRecord = addRecord();
-		output.printAfterAddRecord(addedRecord);
+		outputManager.printAfterAddRecord(addedRecord);
 		upMenu();
 		printMain();
 	}
 	/**
 	 * 연료 소모량 화면 출력
 	 */
-	private void printViewConsumption() {
-		// TODO Auto-generated method stub
-		output.printViewConsumption();
+	protected void printViewConsumption() {
+		outputManager.printViewConsumption();
 	}
 	/**
 	 * 종료화면 출력
 	 */
-	private void printExit() {
-		// TODO Auto-generated method stub
-		output.printExit();
+	protected void printExit() {
+		outputManager.printExit();
 	}
 	/**
 	 * 이동가능한 메뉴인지 확인 후 이동하려는 메뉴로 currentView를 설정
 	 * @param menuCode - 이동할 메뉴코드
 	 */
-	private void moveMenu(int menuCode){
+	protected void moveMenu(int menuCode){
 		//menuCode를 사용하여 해당화면으로 이동
 		MenuType menu = MenuType.isMoveable(menuCode, currentView.getMenuCode());
 		if(menu == null){
@@ -135,7 +133,7 @@ public class CarManager {
 	/**
 	 * 현재 메뉴의 상위 메뉴로 currentView 설정
 	 */
-	private void upMenu(){
+	protected void upMenu(){
 		//menuCode를 사용하여 해당화면으로 이동
 		currentView = MenuType.findMenu(currentView.getParentMenuCode());
 	}
@@ -143,7 +141,7 @@ public class CarManager {
 	 * 현재 currentView 가 Exit인지 확인
 	 * @return - 확인 결과
 	 */
-	private boolean isExit(){
+	protected boolean isExit(){
 		if(currentView == MenuType.Exit){
 			return true;
 		}
@@ -154,13 +152,13 @@ public class CarManager {
 	/**
 	 * 메뉴 입력이 잘못된 경우 메시지 출력
 	 */
-	private void incorrectValue(){
-		output.printIncorrectValue();
+	protected void incorrectValue(){
+		outputManager.printIncorrectValue();
 	}
 	/**
 	 * 현재 설정된 currentView를 출력
 	 */
-	private void printCurrentView(){
+	protected void printCurrentView(){
 		switch(currentView){
 		case Main:
 			printMain();
@@ -185,26 +183,27 @@ public class CarManager {
 			printCarConsumption();
 			break;
 		case Up:
-			break;
 		}
 	}
 	/**
 	 * 차량별 연료 소모량 출력
 	 */
-	private void printCarConsumption() {
+	protected void printCarConsumption() {
 		// TODO Auto-generated method stub
-		TreeMap<String, Double> result = recordMgt.calcCarConsumption();
-		output.printConsumption(result);
+		outputManager.printBeforeConsumption("차량별");
+		TreeMap<String, Double> result = recordManager.calcCarConsumption();
+		outputManager.printAfterConsumption(result);
 		upMenu();
 		printCurrentView();
 	}
 	/**
 	 * 일자별 연료 소모량 출력
 	 */
-	private void printDailyConsumption() {
+	protected void printDailyConsumption() {
 		// TODO Auto-generated method stub
-		TreeMap<String, Double> result = recordMgt.calcDailyConsumption();
-		output.printConsumption(result);
+		outputManager.printBeforeConsumption("일자별");
+		TreeMap<String, Double> result = recordManager.calcDailyConsumption();
+		outputManager.printAfterConsumption(result);
 		upMenu();
 		printCurrentView();
 	}
@@ -218,18 +217,18 @@ public class CarManager {
 	 * 5. 모든 파일 완료 후 최종적으로 추가된 기록 개수 리턴
 	 * @return - 추가된 운행기로 개수
 	 */
-	private int addRecord() {
+	protected int addRecord() {
 		// TODO Auto-generated method stub
 		int addedCount = 0;
-		String []fileNames = input.getFileNames(Main.txtOrderPath);
+		String []fileNames = inputManager.getFileNames(Main.txtOrderPath);
 		if(fileNames == null){
 			return 0;
 		}
-		recordMgt.clearList();
+		recordManager.clearList();
 		for(int i=0; i<fileNames.length; i++){
-			String[] strInfo = input.readFile(fileNames[i], Main.txtOrderPath);
+			String[] strInfo = inputManager.readFile(fileNames[i], Main.txtOrderPath);
 			RecordInfo[] info = Util.StringToRecordInfo(strInfo, fileNames[i]);
-			addedCount += recordMgt.createRecords(info);
+			addedCount += recordManager.createRecords(info);
 		}
 		return addedCount;
 	}

@@ -37,13 +37,6 @@ public class CarStorage {
 		return carMap.get(carNumber);
 	}
 	/**
-	 * 현재 저장된 Car 인스턴스위 개수 리턴 
-	 * @return - 저장된 Car 인스턴스 개수
-	 */
-	public int getCarCount(){
-		return carMap.size();
-	}
-	/**
 	 * 저장소 초기화
 	 */
 	public void clearMap(){

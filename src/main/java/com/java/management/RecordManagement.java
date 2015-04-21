@@ -40,10 +40,12 @@ public class RecordManagement {
 	 */
 	public int createRecords(RecordInfo[] info){
 		int addedCount = 0;
+		if(info == null){
+			return addedCount;
+		}
 		for(int i=0; i<info.length; i++){
-			if(storage.addRecord(info[i])){
-				addedCount++;
-			}
+			storage.addRecord(info[i]);
+			addedCount++;
 		}
 		return addedCount;
 	}
@@ -52,7 +54,6 @@ public class RecordManagement {
 	 * @return - key:일자, value:소모량 구조의 Map을 리턴
 	 */
 	public TreeMap<String, Double> calcDailyConsumption(){
-		System.out.println("일자별");
 		return storage.calcDailyConsumption();
 	}
 	/**
@@ -60,7 +61,6 @@ public class RecordManagement {
 	 * @return - key:차량번호, value:소모량 구조의 Map을 리턴
 	 */
 	public TreeMap<String, Double> calcCarConsumption(){
-		System.out.println("차량별");
 		return 	storage.calcCarConsumption();
 	}
 	/**
