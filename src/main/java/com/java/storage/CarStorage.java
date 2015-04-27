@@ -1,5 +1,6 @@
 package com.java.storage;
 
+import java.util.Set;
 import java.util.TreeMap;
 
 import com.java.cars.Car;
@@ -42,5 +43,12 @@ public class CarStorage {
 	public boolean clearMap(){
 		carMap.clear();
 		return true;
+	}
+	/**
+	 * 모든 차량 번호를 리턴하는 메소드
+	 * @return - 차량번호들
+	 */
+	public Set<String> getCarNumbers(){
+		return carMap.keySet();
 	}
 }

@@ -1,6 +1,7 @@
 package com.java.management;
 
 import java.lang.reflect.Constructor;
+import java.util.Set;
 
 import com.java.Main;
 import com.java.cars.Car;
@@ -107,5 +108,13 @@ public class CarManagement {
 	public boolean clearList(){
 		storage.clearMap();
 		return true;
+	}
+	
+	/**
+	 * 모든 차량 번호를 리턴하는 메소드
+	 * @return - 차량 번호들
+	 */
+	public Set<String> getCarNumbers(){
+		return storage.getCarNumbers();
 	}
 }
