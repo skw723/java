@@ -1,6 +1,7 @@
 package com.servlet.java;
 
 import java.util.Set;
+import java.util.TreeMap;
 
 import com.java.Main;
 import com.java.Util;
@@ -58,8 +59,27 @@ public class CarManager {
 		}
 		return addedCount;
 	}
+	/**
+	 * 저장된 차량 번호들을 리턴하는 메소드
+	 * @return - 차량 번호들
+	 */
 	public String[] getCarNumbers(){
 		Set<String> carNumbers = carManagement.getCarNumbers();
 		return carNumbers.toArray(new String[carNumbers.size()]);
+	}
+	public TreeMap<String, Double> calcConsumption(String[] carNumbers, String[] distances){
+		TreeMap<String, Double> resultData = new TreeMap<String, Double>();
+		int count = carNumbers.length;
+		for(int i=0; i<count; i++){
+			String carNumber = carNumbers[i];
+			int distance = 0;
+			try{				
+				distance = Integer.parseInt(distances[i]);
+			}catch(NumberFormatException e){
+				resultData.put(carNumber, (double) -1);
+			}
+			resultData.put(carNumber, carManagement.calcCunsuption(carNumber, distance));
+		}
+		return resultData;
 	}
 }

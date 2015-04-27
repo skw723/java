@@ -8,10 +8,20 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<table>
-	<c:forEach items="${carNumbers}" var="carNumber">
-		${carNumber}
-	</c:forEach>
-	</table>
+	<form action="/CarManager/CalcCunsumption" method="post">
+		<table style="border-collapse: collapse;">
+			<tr>
+				<th>차량번호</th>
+				<th>이동거리</th>
+			</tr>
+			<c:forEach items="${carNumbers}" var="carNumber">
+				<tr>
+					<td>${carNumber}</td>
+					<td name="distance"><input type="text" name="distance"></td>
+				</tr>
+			</c:forEach>
+		</table>
+		<input type="submit" value="계산">
+	</form>
 </body>
 </html>
